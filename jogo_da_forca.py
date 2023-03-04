@@ -1,6 +1,6 @@
 def jogo_da_forca():
     print('----x----x---- JOGO DA FORCA ----x----x----')
-    print('----- ADIVINHE O NOME DE UMA FRUTA -----')
+    print('----- ADIVINHE O NOME DE UMA FRUTA -----\n')    
 
     import random as rd
     lista = ['LIMAO','ABACAXI','JABUTICABA','UVA','MELANCIA','ABACATE','MORANGO','ABACATE','PEQUI']
@@ -47,7 +47,7 @@ def jogo_da_forca():
                     print('-------- X GAME OVER X --------') 
                     break
             else:
-                print('-------- X -------- X --------')
+                print('-------- X -------- X --------\n')
                 print(f'Você ainda tem mais {9-int(chances)} chances')             
         else:
             print(f'A letra {letra_digitada} NÃO está contida na frase')
@@ -67,7 +67,7 @@ def jogo_da_forca():
                     break 
             else:
                 print(f'Você ainda tem mais {9-int(chances)} chances')
-                print('-------- X -------- X --------') 
+                print('-------- X -------- X --------\n') 
                 
         chances +=1
         if chances >= 8:
