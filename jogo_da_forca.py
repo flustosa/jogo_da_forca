@@ -25,7 +25,7 @@ def jogo_da_forca():
 
     chances = 0
     pal_secreta = list('_' * len(palavra))
-    while chances < 10:
+    while chances <= 10:
         letra_digitada = input('Digite somente uma letra: ').upper()    
         if letra_digitada in palavra:
             print(f'A letra {letra_digitada} está contida na frase')                 
@@ -70,8 +70,5 @@ def jogo_da_forca():
                 print('-------- X -------- X --------\n') 
                 
         chances +=1
-        if chances >= 8:
-            print('-------- X GAME OVER X --------') 
-            print(f'A Palavra correta é {palavra}!')
-
+        
 jogo_da_forca()
