@@ -70,5 +70,8 @@ def jogo_da_forca():
                 print('-------- X -------- X --------\n') 
                 
         chances +=1
-        
+        if chances >= 10:
+            print('-------- X GAME OVER X --------') 
+            print(f'A Palavra correta é {palavra}!')
+
 jogo_da_forca()
