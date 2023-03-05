@@ -73,5 +73,5 @@ def jogo_da_forca():
         if chances >= 10:
             print('-------- X GAME OVER X --------') 
             print(f'A Palavra correta é {palavra}!')
-
+            break
 jogo_da_forca()
