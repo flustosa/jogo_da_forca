@@ -1,4 +1,5 @@
 import os
+import subprocess
 from gtts import gTTS as gs
 import random as rd
 
@@ -19,10 +20,18 @@ opcoes = {
 
 ### FUNCOES BASICAS ###
 
+# Captura a saída do comando uname -o
+op_sys = subprocess.check_output("uname -o", shell=True).decode().strip()
+
 def fale(texto, language='pt'):
     audio = gs(text=texto, lang=language, slow=False)
     audio.save("audio.mp3")
-    os.system("mpg123 -q audio.mp3")
+    
+    # Verifica o sistema operacional e executa o player adequado
+    if op_sys == "Android":
+        os.system("mpv --really-quiet audio.mp3")
+    else:
+        os.system("mpg123 -q audio.mp3")
 
 def inicio():
     os.system('clear')
@@ -52,6 +61,7 @@ while jogo not in opcoes_num.keys():
         break
 
 if jogo == '4':
+    fale('Escreva a palavra')
     palavra_escrita = input('Escreva a palavra: ').upper().strip()
     while len(palavra_escrita) < 2:
         print('Digite uma palavra de verdade!')
