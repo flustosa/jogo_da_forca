@@ -1,5 +1,5 @@
 # jogo_da_forca
-Jogo da forca em Python
+Jogo da forca em Python<br>
 É possível escolher nomes de frutas, animais e insetos, além de uma palavra nova, para jogar com outra pessoa.
 
 ## Requisitos
