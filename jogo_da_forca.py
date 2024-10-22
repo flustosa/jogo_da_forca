@@ -6,6 +6,7 @@ import random as rd
 
 ## TODO: Contar letras corretas como tentativas
 ## TODO: Fazer loop do jogo geral
+## TODO: Tratar nomes compostos, com espaços e traços
 
 #### PARAMETROS #####
 with open('./animais.txt') as animais_list:
@@ -103,10 +104,9 @@ def inicio(opcoes_list):
         return (opcoes_num[jogo], jogo)
 
 
-lista, jogo = inicio(opcoes)
 
 
-def jogo_da_forca():
+def jogo_da_forca(lista, jogo):
     os.system('clear')
 
     palavra = palavra_aleatoria(lista)
@@ -118,7 +118,6 @@ def jogo_da_forca():
 
     def tela_jogo():
         os.system('clear')
-        num_jogo = int(jogo)
         print(5 * '_-' + f' ADIVINHE A PALAVRA' + 5 * '_-' + '\n')
         print(f'DICA: A palavra tem {len(palavra)} letras')
         print(f'CHANCES: {9 - chances}')
@@ -130,7 +129,7 @@ def jogo_da_forca():
         opcao = input(' (S ou N): ').upper()
         if opcao == 'S':
             resposta = input('Digite a palavra: ').upper().strip()
-            if remove_acentos(resposta) == remove_acentos(palavra):
+            if remove_acentos(resposta) == palavra_unicode:
                 print('-------- X -------- X --------')
                 ganhou = f'Parabéns!!\nA Palavra correta é {palavra}!'
                 fale(ganhou)
@@ -155,10 +154,9 @@ def jogo_da_forca():
 
         letras_tentadas.append(remove_acentos(letra_digitada))
 
-        if remove_acentos(letra_digitada) in remove_acentos(palavra):
-            posicao = localizar(palavra, letra_digitada)  # não precisa remover acentos, já removido em "localizar()"
+        if remove_acentos(letra_digitada) in palavra_unicode:
+            posicao = localizar(palavra, letra_digitada)
             for i in posicao:
-                # pal_secreta[i] = letra_digitada
                 pal_secreta[i] = palavra[i]
 
             tela_jogo()
@@ -173,21 +171,18 @@ def jogo_da_forca():
 
             if chute():
                 break
-            # else:
-                # tela_jogo()
 
         else:
             letras_erradas.append(letra_digitada)
             tela_jogo()
-            print(palavra)
             fale(f'A palavra não tem "{letra_digitada}"')
             chances += 1  # Incrementa a chance apenas se o usuário errar
-            print(f'{9 - chances} chances restantes')
 
         if chances >= 10:
             print('-------- X GAME OVER X --------')
-            fale(f'A Palavra correta é {palavra}!')
+            fale(f'Não foi desta vez!\nA Palavra correta é {palavra}!')
             break
 
+lista, jogo = inicio(opcoes)
+jogo_da_forca(lista, jogo)
 
-jogo_da_forca()
