@@ -15,8 +15,10 @@ with open('./animais.txt') as animais_list:
 with open('./insetos.txt') as insetos_list:
     insetos = insetos_list.read().splitlines()
 
+with open('./frutas.txt') as frutas_list:
+    frutas = frutas_list.read().splitlines()
 
-frutas = ['LIMAO', 'ABACAXI', 'JABUTICABA', 'UVA', 'MELANCIA', 'ABACATE', 'MORANGO', 'PEQUI']
+
 opcoes = {
     '1 - FRUTAS': frutas,
     '2 - ANIMAIS': animais,
@@ -44,9 +46,21 @@ def fale(texto, language='pt', print_word=True, same_line=False):
     else:
         os.system("mpg123 -q audio.mp3")
 
+def acertou():
+    if op_sys == "Android":
+        os.system("mpv --really-quiet ./audio/certa_resposta.mp3")
+    else:
+        os.system("mpg123 -q ./audio/certa_resposta.mp3")
+
+def errou():
+    if op_sys == "Android":
+        os.system("mpv --really-quiet ./audio/errou.mp3")
+    else:
+        os.system("mpg123 -q ./audio/errou.mp3")
+
 
 def remove_acentos(texto):
-    """Normaliza o texto para a forma compatível com a decomposição Unicode"""
+    """ Normaliza o texto para a forma compatível com a decomposição Unicode """
     texto_normalizado = unicodedata.normalize('NFD', texto)
     # Filtra os caracteres não acentuados
     texto_sem_acento = ''.join(char for char in texto_normalizado if unicodedata.category(char) != 'Mn')
@@ -69,27 +83,25 @@ def localizar(texto, letra):
             posicoes.append(i)
     return posicoes
 
-
-def inicio(opcoes_list):
-    jogo = ''
-    opcoes_num = {}
-
+def menu_inicial(opcoes_num):
     os.system('clear')
     print('----x----x---- JOGO DA FORCA ----x----x----\n')
-    #    print('Escolha um tipo de palavra e digite o número correspondente: ')
     for tipo in opcoes.keys():
         print(f'--> {tipo}')
     for key, value in opcoes.items():
         opcoes_num[key[0]] = value
     fale('Escolha um tipo de palavra e digite o número correspondente: ', print_word=False, same_line=True)
 
+
+def inicio(opcoes_list):
+    jogo = ''
+    opcoes_num = {}
     while jogo not in opcoes_num.keys():
+        menu_inicial(opcoes_num)
         jogo = input('Digite o número de um jogo: ').upper()
         if jogo not in opcoes_num.keys():
-            os.system('clear')
-            #print(f'Não encontrei a opção {jogo}. Escreva novamente o nome do jogo.')
+            print('\n')
             fale(f'Não encontrei a opção {jogo}')
-            inicio()
         else:
             break
 
@@ -104,15 +116,24 @@ def inicio(opcoes_list):
         return (opcoes_num[jogo], jogo)
 
 
+def gera_palavra_secreta(palavra):
+    palavra_secreta = [] 
+    print(type(palavra_secreta))
+    for letra in palavra:
+        if letra == '-':
+            palavra_secreta.append('-')
+        else:
+            palavra_secreta.append('_')
+    return palavra_secreta
 
 
 def jogo_da_forca(lista, jogo):
     os.system('clear')
-
     palavra = palavra_aleatoria(lista)
     palavra_unicode = remove_acentos(palavra)
     chances = 0
-    pal_secreta = list('_' * len(palavra))
+    palavra_secreta = list('_' * len(palavra))
+    palavra_secreta = gera_palavra_secreta(palavra)
     letras_erradas = []
     letras_tentadas = []
 
@@ -122,7 +143,7 @@ def jogo_da_forca(lista, jogo):
         print(f'DICA: A palavra tem {len(palavra)} letras')
         print(f'CHANCES: {9 - chances}')
         print('LETRAS: ' + ', '.join(letras_erradas))
-        print('\n' + ' '.join(pal_secreta) + '\n')
+        print('\n' + ' '.join(palavra_secreta) + '\n')
 
     def chute():
         fale(texto='Já sabe qual é a palavra?', same_line=True)
@@ -157,12 +178,13 @@ def jogo_da_forca(lista, jogo):
         if remove_acentos(letra_digitada) in palavra_unicode:
             posicao = localizar(palavra, letra_digitada)
             for i in posicao:
-                pal_secreta[i] = palavra[i]
+                palavra_secreta[i] = palavra[i]
 
             tela_jogo()
             print(f'ACERTOU! A letra {letra_digitada} está contida na palavra')
-            fale('Acertou', print_word=False)
-            palavra_parcial = ''.join(pal_secreta)
+            
+            acertou()
+            palavra_parcial = ''.join(palavra_secreta)
             if palavra_parcial == palavra:
                 ganhou = f'Parabéns!!\nA Palavra correta é {palavra}!'
                 fale(ganhou)
@@ -175,6 +197,7 @@ def jogo_da_forca(lista, jogo):
         else:
             letras_erradas.append(letra_digitada)
             tela_jogo()
+            errou()
             fale(f'A palavra não tem "{letra_digitada}"')
             chances += 1  # Incrementa a chance apenas se o usuário errar
 

@@ -110,4 +110,4 @@ venv.bak/
 .idea/
 
 # temp files
-./*.mp3
+audio.mp3
