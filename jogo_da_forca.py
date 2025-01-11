@@ -4,9 +4,8 @@ import unicodedata
 from gtts import gTTS as gs
 import random as rd
 
-## TODO: Contar letras corretas como tentativas
 ## TODO: Fazer loop do jogo geral
-## TODO: Tratar nomes compostos, com espaços e traços
+## TODO: Tratar nomes com espaços 
 
 #### PARAMETROS #####
 with open('./animais.txt') as animais_list:
@@ -33,8 +32,11 @@ op_sys = subprocess.check_output("uname -o", shell=True).decode().strip()
 
 
 def fale(texto, language='pt', print_word=True, same_line=False):
-    audio = gs(text=texto, lang=language, slow=False)
-    audio.save("audio.mp3")
+    try:
+        audio = gs(text=texto, lang=language, slow=False)
+        audio.save("audio.mp3")
+    except:
+        pass
     if print_word and same_line:
         print(f'{texto}', end='')
     elif print_word and not same_line:
